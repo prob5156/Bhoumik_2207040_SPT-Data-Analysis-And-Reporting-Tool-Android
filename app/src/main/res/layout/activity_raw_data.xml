@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+
+        <TextView android:id="@+id/lblRawHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20sp" android:textStyle="bold" />
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="12dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Add SPT entry" />
+
+            <EditText android:id="@+id/etSampleCode" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Sample code" />
+            <EditText android:id="@+id/etDepth" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Depth" android:inputType="numberDecimal" />
+            <EditText android:id="@+id/etN1" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N1" android:inputType="number" />
+            <EditText android:id="@+id/etN2" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N2" android:inputType="number" />
+            <EditText android:id="@+id/etN3" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N3" android:inputType="number" />
+            <EditText android:id="@+id/etHammer" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Hammer energy (%) - optional" android:inputType="numberDecimal" />
+            <EditText android:id="@+id/etWater" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Water content (%) - optional" android:inputType="numberDecimal" />
+            <Button android:id="@+id/btnAddSpt" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Add" android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#DDDDDD" android:layout_marginTop="12dp" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Existing entries" android:layout_marginTop="12dp" />
+
+        <LinearLayout android:id="@+id/llSptList" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+</ScrollView>

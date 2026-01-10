@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/lblHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SPT Data Analysis"
+            android:textSize="22sp"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Secure login to manage and view SPT data"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            android:padding="8dp">
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phone" />
+            <EditText
+                android:id="@+id/tfUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:hint="Phone number" />
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:layout_marginTop="8dp" />
+            <EditText
+                android:id="@+id/tfPass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sign In"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#DDDDDD" android:layout_marginTop="16dp" />
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quick login (modifiers)" android:layout_marginTop="12dp" />
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+            <Button android:id="@+id/btn_senior" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SENIOR" />
+            <Space android:layout_width="12dp" android:layout_height="wrap_content" />
+            <Button android:id="@+id/btn_sub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SUB" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
