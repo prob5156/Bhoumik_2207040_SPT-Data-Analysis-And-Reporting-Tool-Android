@@ -22,7 +22,7 @@ public class AnalysisActivity extends AppCompatActivity {
             android.view.View listTable3 = findViewById(R.id.listTable3);
             if (listTable2 != null && listTable3 != null) {
                 int screenH = getResources().getDisplayMetrics().heightPixels;
-                // give each table about 40% of screen height
+                // give each table about 40% of screen height/**/
                 int target = (int) (screenH * 0.4f);
                 android.view.ViewGroup.LayoutParams p2 = listTable2.getLayoutParams();
                 android.view.ViewGroup.LayoutParams p3 = listTable3.getLayoutParams();
