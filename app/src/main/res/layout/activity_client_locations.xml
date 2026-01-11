@@ -35,23 +35,15 @@
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phone:" />
                     <TextView android:id="@+id/lblPhoneNumber" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" />
                 </LinearLayout>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <Button
-                    android:id="@+id/btnEnterNewLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Enter new location" />
-                <Button
-                    android:id="@+id/btnBackLocations"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Back"
-                    android:layout_marginTop="8dp" />
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
+                    <Button
+                        style="@style/AppButton"
+                        android:id="@+id/btnEnterNewLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enter new location" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -61,23 +53,21 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Search:" />
-            <EditText android:id="@+id/tfSearchLocations" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Search locations by name" android:layout_marginStart="8dp" />
+            <EditText style="@style/AppInput" android:id="@+id/tfSearchLocations" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Search locations by name" android:layout_marginStart="8dp" />
         </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rcLocations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" />
 
         <LinearLayout
             android:id="@+id/llLocationsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:baselineAligned="false"
-            android:layoutDirection="ltr"
-            android:gravity="start"
-            android:padding="4dp"
-            android:weightSum="1"
-            >
-            <!-- Location cards are added programmatically here -->
-        </LinearLayout>
+            android:orientation="vertical"
+            android:layout_marginTop="12dp" />
 
     </LinearLayout>
 

@@ -34,6 +34,7 @@
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phone" />
             <EditText
+                style="@style/AppInput"
                 android:id="@+id/tfUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Password" android:layout_marginTop="8dp" />
             <EditText
+                style="@style/AppInput"
                 android:id="@+id/tfPass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -49,6 +51,7 @@
                 android:hint="Password" />
 
             <Button
+                style="@style/AppButton"
                 android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,9 +65,9 @@
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quick login (modifiers)" android:layout_marginTop="12dp" />
 
         <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
-            <Button android:id="@+id/btn_senior" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SENIOR" />
+            <Button style="@style/AppButton" android:id="@+id/btn_senior" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SENIOR" />
             <Space android:layout_width="12dp" android:layout_height="wrap_content" />
-            <Button android:id="@+id/btn_sub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SUB" />
+            <Button style="@style/AppButton" android:id="@+id/btn_sub" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SUB" />
         </LinearLayout>
 
     </LinearLayout>

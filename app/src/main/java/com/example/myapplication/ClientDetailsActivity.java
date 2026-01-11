@@ -14,7 +14,6 @@ public class ClientDetailsActivity extends AppCompatActivity {
         android.widget.EditText tfPhoneNumber = findViewById(R.id.tfPhoneNumber);
         android.widget.EditText tfPassword = findViewById(R.id.tfPassword);
         android.widget.Button btnSubmitClient = findViewById(R.id.btnSubmitClient);
-        android.widget.Button btnBackClient = findViewById(R.id.btnBackClient);
 
         btnSubmitClient.setOnClickListener(v -> {
             if ("SUB".equalsIgnoreCase(AppSession.role)) {
@@ -28,7 +27,7 @@ public class ClientDetailsActivity extends AppCompatActivity {
                 android.widget.Toast.makeText(this, "All fields are required.", android.widget.Toast.LENGTH_LONG).show();
                 return;
             }
-            long id = db.insertClient(clientName, phone, pwd);
+            long id = db.insertClientWithRemote(clientName, phone, pwd);
             if (id > 0) {
                 AppSession.clientId = (int) id;
                 AppSession.clientName = clientName;
@@ -40,6 +39,6 @@ public class ClientDetailsActivity extends AppCompatActivity {
             }
         });
 
-        btnBackClient.setOnClickListener(v -> startActivity(new android.content.Intent(this, ModifiersDashboardActivity.class)));
+        // back navigation handled by system back button; no explicit Back UI control
     }
 }

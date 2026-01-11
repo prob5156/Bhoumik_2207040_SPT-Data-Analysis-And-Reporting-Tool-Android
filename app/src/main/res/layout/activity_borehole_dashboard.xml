@@ -20,8 +20,7 @@
             </LinearLayout>
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical">
-                <Button android:id="@+id/btnEditLocation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Edit" />
-                <Button android:id="@+id/btnBack" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Back" android:layout_marginTop="8dp" />
+                <Button style="@style/AppButton" android:id="@+id/btnEditLocation" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Edit" />
             </LinearLayout>
         </LinearLayout>
 
@@ -31,12 +30,21 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Search:" />
-            <EditText android:id="@+id/tfSearchBoreholes" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Search boreholes by name" android:layout_marginStart="8dp" />
+            <EditText style="@style/AppInput" android:id="@+id/tfSearchBoreholes" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:hint="Search boreholes by name" android:layout_marginStart="8dp" />
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/vboxBoreholes" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="12dp">
-            <!-- borehole buttons added programmatically -->
-        </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcBoreholes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp" />
+
+        <LinearLayout
+            android:id="@+id/vboxBoreholes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp" />
 
     </LinearLayout>
 

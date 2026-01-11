@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.myapplication" />
+                  <option name="mobileSdkAppId" value="1:210502267241:android:4c8e6a91fb527844408df8" />
+                  <option name="projectId" value="spt-data-analysis-tool" />
+                  <option name="projectNumber" value="210502267241" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

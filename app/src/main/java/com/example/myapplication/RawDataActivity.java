@@ -11,10 +11,16 @@ import android.widget.TextView;
 import android.database.Cursor;
 import android.widget.Toast;
 import android.view.LayoutInflater;
+import android.text.TextUtils;
+import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
+import androidx.core.content.ContextCompat;
 
 public class RawDataActivity extends AppCompatActivity {
     private DBHelper db;
     private LinearLayout llSptList;
+    private View selectedRowView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +34,6 @@ public class RawDataActivity extends AppCompatActivity {
         EditText etN1 = findViewById(R.id.etN1);
         EditText etN2 = findViewById(R.id.etN2);
         EditText etN3 = findViewById(R.id.etN3);
-        EditText etHammer = findViewById(R.id.etHammer);
-        EditText etWater = findViewById(R.id.etWater);
         Button btnAddSpt = findViewById(R.id.btnAddSpt);
         llSptList = findViewById(R.id.llSptList);
 
@@ -55,12 +59,23 @@ public class RawDataActivity extends AppCompatActivity {
                 if (id > 0) {
                     Toast.makeText(RawDataActivity.this, "SPT added", Toast.LENGTH_SHORT).show();
                     etSampleCode.setText(""); etDepth.setText(""); etN1.setText(""); etN2.setText(""); etN3.setText("");
-                    if (etHammer != null) etHammer.setText("");
-                    if (etWater != null) etWater.setText("");
                     runOnUiThread(this::refreshSptList);
                 }
             } catch (NumberFormatException ex) {
                 Toast.makeText(RawDataActivity.this, "Invalid number input", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        Button btnAnalysisBottom = findViewById(R.id.btnAnalysisBottom);
+        btnAnalysisBottom.setOnClickListener(v -> {
+            if (AppSession.selectedSptId > 0) {
+                Log.d("RawDataActivity", "Launching AnalysisActivity with selectedSptId=" + AppSession.selectedSptId);
+                Toast.makeText(RawDataActivity.this, "Launching Analysis for SPT id=" + AppSession.selectedSptId, Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(RawDataActivity.this, AnalysisActivity.class);
+                i.putExtra("selectedSptId", AppSession.selectedSptId);
+                startActivity(i);
+            } else {
+                Toast.makeText(RawDataActivity.this, "Please select an SPT row before Analysis", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -79,32 +94,103 @@ public class RawDataActivity extends AppCompatActivity {
                 int n2 = c.getInt(c.getColumnIndexOrThrow("n2"));
                 int n3 = c.getInt(c.getColumnIndexOrThrow("n3"));
 
+                // Build a horizontal row with weighted columns to align with header
                 LinearLayout row = new LinearLayout(this);
-                row.setOrientation(LinearLayout.VERTICAL);
+                row.setOrientation(LinearLayout.HORIZONTAL);
                 LinearLayout.LayoutParams rp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 rp.setMargins(0,8,0,8);
                 row.setLayoutParams(rp);
-                TextView t = new TextView(this);
-                t.setText("#"+id+" " + sample + " — depth:"+depth+" n1:"+n1+" n2:"+n2+" n3:"+n3);
-                row.addView(t);
+
+                // helper to create text cells
+                TextView cSample = new TextView(this);
+                LinearLayout.LayoutParams lp0 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2f);
+                cSample.setLayoutParams(lp0);
+                cSample.setText(sample == null || sample.isEmpty() ? ("#"+id) : ("#"+id+" "+sample));
+                cSample.setSingleLine(true);
+                cSample.setEllipsize(TextUtils.TruncateAt.END);
+                cSample.setPadding(8,4,8,4);
+                row.addView(cSample);
+
+                TextView cDepth = new TextView(this);
+                cDepth.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                cDepth.setText(String.valueOf(depth));
+                cDepth.setSingleLine(true);
+                cDepth.setEllipsize(TextUtils.TruncateAt.END);
+                cDepth.setPadding(6,4,6,4);
+                row.addView(cDepth);
+
+                TextView cN1 = new TextView(this);
+                cN1.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                cN1.setText(String.valueOf(n1));
+                cN1.setSingleLine(true);
+                cN1.setEllipsize(TextUtils.TruncateAt.END);
+                cN1.setPadding(6,4,6,4);
+                row.addView(cN1);
+
+                TextView cN2 = new TextView(this);
+                cN2.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                cN2.setText(String.valueOf(n2));
+                cN2.setSingleLine(true);
+                cN2.setEllipsize(TextUtils.TruncateAt.END);
+                cN2.setPadding(6,4,6,4);
+                row.addView(cN2);
+
+                TextView cN3 = new TextView(this);
+                cN3.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+                cN3.setText(String.valueOf(n3));
+                cN3.setSingleLine(true);
+                cN3.setEllipsize(TextUtils.TruncateAt.END);
+                cN3.setPadding(6,4,6,4);
+                row.addView(cN3);
 
                 int nTotal = n1 + n2 + n3;
+                TextView cTotal = new TextView(this);
+                cTotal.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
+                cTotal.setText(String.valueOf(nTotal));
+                cTotal.setSingleLine(true);
+                cTotal.setEllipsize(TextUtils.TruncateAt.END);
+                cTotal.setPadding(6,4,6,4);
+                row.addView(cTotal);
+
                 double nAvg = nTotal / 3.0;
                 String desc = describeSoil(nTotal, nAvg, depth);
-                TextView meta = new TextView(this);
-                meta.setText("N_total: " + nTotal + "  N_avg: " + String.format("%.1f", nAvg) + "  — " + desc);
-                row.addView(meta);
+                TextView cDesc = new TextView(this);
+                cDesc.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 3f));
+                cDesc.setText(desc);
+                cDesc.setSingleLine(true);
+                cDesc.setEllipsize(TextUtils.TruncateAt.END);
+                cDesc.setPadding(6,4,6,4);
+                row.addView(cDesc);
 
                 Button del = new Button(this);
                 del.setText("Delete");
                 del.setOnClickListener(v -> {
                     int removed = db.deleteSptData(id);
                     if (removed > 0) {
+                        if (AppSession.selectedSptId == id) {
+                            AppSession.selectedSptId = 0;
+                            selectedRowView = null;
+                        }
                         Toast.makeText(RawDataActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
                         runOnUiThread(this::refreshSptList);
                     }
                 });
+                
+                // make the whole row selectable
+                row.setClickable(true);
+                row.setOnClickListener(v -> {
+                    AppSession.selectedSptId = id;
+                    // clear previous highlight
+                    for (int i = 0; i < llSptList.getChildCount(); i++) {
+                        View child = llSptList.getChildAt(i);
+                        child.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    // highlight this row
+                    row.setBackgroundColor(Color.LTGRAY);
+                    selectedRowView = row;
+                });
                 row.addView(del);
+
                 llSptList.addView(row);
             }
         } catch (Exception ex) {

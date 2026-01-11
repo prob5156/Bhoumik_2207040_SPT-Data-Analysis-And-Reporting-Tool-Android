@@ -1,31 +1,407 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+    <!-- Floating Analysis button bottom-right -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView android:id="@+id/lblRawHeader" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textSize="20sp" android:textStyle="bold" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="12dp">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Add SPT entry" />
+            <TextView
+                android:id="@+id/lblRawHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <EditText android:id="@+id/etSampleCode" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Sample code" />
-            <EditText android:id="@+id/etDepth" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Depth" android:inputType="numberDecimal" />
-            <EditText android:id="@+id/etN1" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N1" android:inputType="number" />
-            <EditText android:id="@+id/etN2" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N2" android:inputType="number" />
-            <EditText android:id="@+id/etN3" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="N3" android:inputType="number" />
-            <EditText android:id="@+id/etHammer" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Hammer energy (%) - optional" android:inputType="numberDecimal" />
-            <EditText android:id="@+id/etWater" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Water content (%) - optional" android:inputType="numberDecimal" />
-            <Button android:id="@+id/btnAddSpt" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Add" android:layout_marginTop="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Raw SPT Data Entry"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Entry area: compact vertical groups for better fit on phone -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                style="@style/CardSurface"
+                android:orientation="vertical">
+
+                <!-- First row: Sample ID + Depth + Add -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <EditText
+                        style="@style/AppInput"
+                        android:id="@+id/etSampleCode"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:hint="Sample ID"
+                        android:padding="8dp" />
+
+                    <EditText
+                        style="@style/AppInput"
+                        android:id="@+id/etDepth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="0.6"
+                        android:hint="Depth"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp" />
+
+                    <Button
+                        android:id="@+id/btnAddSpt"
+                        style="@style/AppButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="0.6"
+                        android:text="Add" />
+                </LinearLayout>
+
+                <!-- Second row: N1, N2, N3 compact -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <EditText
+                        android:id="@+id/etN1"
+                        style="@style/AppInput"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="N1"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/etN2"
+                        style="@style/AppInput"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="N2"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/etN3"
+                        style="@style/AppInput"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:hint="N3"
+                        android:inputType="number" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- (Hammer energy and water content removed per request) -->
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="12dp"
+                android:background="#DDDDDD" />
+
+            <!-- Visual classification area -->
+
+            <!-- Describe range -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <LinearLayout
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Color" />
+
+                    <EditText
+                        android:id="@+id/tfColor"
+                        style="@style/AppInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Color Code"
+                        android:maxLines="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Percentages" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:baselineAligned="false">
+
+                        <EditText
+                            android:id="@+id/tfSand"
+                            style="@style/AppInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Sand %"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1" />
+
+                        <EditText
+                            android:id="@+id/tfSilt"
+                            style="@style/AppInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:hint="Silt %"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1" />
+
+                        <EditText
+                            android:id="@+id/tfClay"
+                            style="@style/AppInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:hint="Clay %"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/tfFromFeet"
+                    style="@style/AppInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="From (feet)" />
+
+                <EditText
+                    android:id="@+id/tfToFeet"
+                    style="@style/AppInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:hint="To (feet)" />
+
+                <Button
+                    style="@style/AppButton"
+                    android:id="@+id/btnDescribe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Describe" />
+            </LinearLayout>
+
+            <!-- Action buttons organized into two rows to fit vertically -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnUpdate"
+                            style="@style/AppButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Update" />
+
+                        <Button
+                            android:id="@+id/btnDelete"
+                            style="@style/AppButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:text="Delete" />
+
+                </LinearLayout>
+
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <!-- Back button removed -->
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/btnDeleteVisualClassification"
+                            style="@style/AppButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Delete Classification" />
+                    </LinearLayout>
+            </LinearLayout>
+
+            <!-- Table header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Existing entries" />
+
+            <!-- Table-like header row -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Sample ID"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Depth"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="N1"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="N2"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="N3"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="TOTAL SPT VALUE"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            android:text="Description of Soil"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end" />
+                    </LinearLayout>
+
+                    <!-- Container where rows will be added programmatically -->
+                    <LinearLayout
+                        android:id="@+id/llSptList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Back button removed -->
+
         </LinearLayout>
+    </ScrollView>
 
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#DDDDDD" android:layout_marginTop="12dp" />
+    <Button
+        android:id="@+id/btnAnalysisBottom"
+        style="@style/AppButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Analysis"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|end" />
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Existing entries" android:layout_marginTop="12dp" />
-
-        <LinearLayout android:id="@+id/llSptList" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="8dp" />
-
-    </LinearLayout>
-
-</ScrollView>
+</FrameLayout>

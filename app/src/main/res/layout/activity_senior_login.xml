@@ -16,6 +16,7 @@
         android:layout_marginTop="16dp" />
 
     <EditText
+        style="@style/AppInput"
         android:id="@+id/tfUserSenior"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -28,6 +29,7 @@
         android:layout_marginTop="24dp" />
 
     <EditText
+        style="@style/AppInput"
         android:id="@+id/tfPassSenior"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -41,6 +43,7 @@
         android:layout_marginTop="12dp" />
 
     <Button
+        style="@style/AppButton"
         android:id="@+id/btnLoginSenior"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

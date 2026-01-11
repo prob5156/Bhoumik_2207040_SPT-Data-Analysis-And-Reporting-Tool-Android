@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.view.ViewGroup;
 
 import android.widget.EditText;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
 
 public class BoreholeDashboardActivity extends AppCompatActivity {
     @Override
@@ -22,7 +24,6 @@ public class BoreholeDashboardActivity extends AppCompatActivity {
         TextView lblLocationName = findViewById(R.id.lblLocationName);
         TextView lblBoreHoles = findViewById(R.id.lblBoreHoles);
         Button btnEditLocation = findViewById(R.id.btnEditLocation);
-        Button btnBack = findViewById(R.id.btnBack);
         LinearLayout vboxBoreholes = findViewById(R.id.vboxBoreholes);
         EditText tfSearchBoreholes = findViewById(R.id.tfSearchBoreholes);
 
@@ -40,25 +41,14 @@ public class BoreholeDashboardActivity extends AppCompatActivity {
         btnEditLocation.setVisibility("CLIENT".equalsIgnoreCase(AppSession.role) ? View.GONE : View.VISIBLE);
 
         btnEditLocation.setOnClickListener(v -> startActivity(new Intent(BoreholeDashboardActivity.this, EditLocationActivity.class)));
-        btnBack.setOnClickListener(v -> startActivity(new Intent(BoreholeDashboardActivity.this, ClientLocationsActivity.class)));
 
         // generate borehole buttons
         vboxBoreholes.removeAllViews();
-        for (int i = 1; i <= boreHoles; i++) {
-            final int boreholeNum = i;
-            Button b = new Button(this);
-            b.setText("Borehole " + i);
-            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            p.setMargins(0,8,0,8);
-            b.setLayoutParams(p);
-            b.setMinHeight(120);
-            b.setAllCaps(false);
-            b.setOnClickListener(v -> {
-                AppSession.selectedBorehole = boreholeNum;
-                startActivity(new Intent(BoreholeDashboardActivity.this, RawDataActivity.class));
-            });
-            vboxBoreholes.addView(b);
-        }
+        androidx.recyclerview.widget.RecyclerView rc = findViewById(R.id.rcBoreholes);
+        BoreholeAdapter adapter = new BoreholeAdapter(num -> { AppSession.selectedBorehole = num; startActivity(new Intent(BoreholeDashboardActivity.this, RawDataActivity.class)); });
+        rc.setAdapter(adapter);
+        rc.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        adapter.setCount(boreHoles);
 
         tfSearchBoreholes.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -75,5 +65,34 @@ public class BoreholeDashboardActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private final int[] STICKER_PALETTE = new int[] {
+            0xFF6EC6FF,
+            0xFFFF8A65,
+            0xFFAED581,
+            0xFFF48FB1,
+            0xFFFFF176,
+            0xFFB39DDB
+    };
+
+    private void applyStickerStyle(Button btn, int index) {
+        int color = STICKER_PALETTE[index % STICKER_PALETTE.length];
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(color);
+        float radius = getResources().getDisplayMetrics().density * 12f;
+        gd.setCornerRadius(radius);
+        int stroke = (int)(getResources().getDisplayMetrics().density * 0.5f);
+        gd.setStroke(stroke, 0x22000000);
+        btn.setBackground(gd);
+        double r = ((color >> 16) & 0xFF) / 255.0;
+        double g = ((color >> 8) & 0xFF) / 255.0;
+        double b = (color & 0xFF) / 255.0;
+        double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        btn.setTextColor(luminance > 0.6 ? 0xFF222222 : Color.WHITE);
+        int pad = (int)(getResources().getDisplayMetrics().density * 12f);
+        btn.setPadding(pad, pad, pad, pad);
+        btn.setAllCaps(false);
+        btn.setElevation(getResources().getDisplayMetrics().density * 4f);
     }
 }

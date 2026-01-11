@@ -5,13 +5,29 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String NAME = "spt.db";
     private static final int VERSION = 1;
+    private static final String TAG = "DBHelper";
+    private FirebaseFirestore firestore;
 
     public DBHelper(Context ctx) {
         super(ctx, NAME, null, VERSION);
+        try {
+            FirebaseApp.initializeApp(ctx);
+            firestore = FirebaseFirestore.getInstance();
+        } catch (Exception ex) {
+            Log.w(TAG, "Firebase init failed", ex);
+            firestore = null;
+        }
     }
 
     @Override
@@ -37,6 +53,20 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.insert("clients", null, cv);
     }
 
+    public long insertClientWithRemote(String name, String phone, String password) {
+        long id = insertClient(name, phone, password);
+        if (id > 0 && firestore != null) {
+            Map<String, Object> doc = new HashMap<>();
+            doc.put("name", name);
+            doc.put("phone", phone);
+            doc.put("password", password);
+            firestore.collection("clients").document(String.valueOf(id)).set(doc)
+                    .addOnSuccessListener(a -> Log.d(TAG, "Saved client to Firestore: " + id))
+                    .addOnFailureListener(e -> Log.w(TAG, "Failed to save client to Firestore", e));
+        }
+        return id;
+    }
+
     public Cursor fetchClients() {
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery("SELECT * FROM clients", null);
@@ -48,7 +78,17 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("client_id", clientId);
         cv.put("location_name", locationName);
         cv.put("bore_holes", holes);
-        return db.insert("locations", null, cv);
+        long id = db.insert("locations", null, cv);
+        if (id > 0 && firestore != null) {
+            Map<String, Object> doc = new HashMap<>();
+            doc.put("client_id", clientId);
+            doc.put("location_name", locationName);
+            doc.put("bore_holes", holes);
+            firestore.collection("locations").document(String.valueOf(id)).set(doc)
+                    .addOnSuccessListener(a -> Log.d(TAG, "Saved location to Firestore: " + id))
+                    .addOnFailureListener(e -> Log.w(TAG, "Failed to save location to Firestore", e));
+        }
+        return id;
     }
 
     public int updateLocation(int id, String locationName, int holes) {
@@ -74,7 +114,21 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put("n1", n1);
         cv.put("n2", n2);
         cv.put("n3", n3);
-        return db.insert("spt_data", null, cv);
+        long id = db.insert("spt_data", null, cv);
+        if (id > 0 && firestore != null) {
+            Map<String, Object> doc = new HashMap<>();
+            doc.put("borehole_id", boreholeId);
+            doc.put("location_id", locationId);
+            doc.put("sample_code", sampleCode);
+            doc.put("depth", depth);
+            doc.put("n1", n1);
+            doc.put("n2", n2);
+            doc.put("n3", n3);
+            firestore.collection("spt_data").document(String.valueOf(id)).set(doc)
+                    .addOnSuccessListener(a -> Log.d(TAG, "Saved spt_data to Firestore: " + id))
+                    .addOnFailureListener(e -> Log.w(TAG, "Failed to save spt_data to Firestore", e));
+        }
+        return id;
     }
 
     public Cursor fetchSptDataByBorehole(int boreholeId, int locationId) {

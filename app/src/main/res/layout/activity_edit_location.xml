@@ -19,16 +19,16 @@
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="12dp">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Location Name:" />
-            <EditText android:id="@+id/txfLocationName" android:layout_width="match_parent" android:layout_height="wrap_content" />
+            <EditText style="@style/AppInput" android:id="@+id/txfLocationName" android:layout_width="match_parent" android:layout_height="wrap_content" />
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Number of Bore Holes:" android:layout_marginTop="8dp" />
-            <EditText android:id="@+id/txfBoreHoles" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+            <EditText style="@style/AppInput" android:id="@+id/txfBoreHoles" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="16dp">
-            <Button android:id="@+id/btnSave" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Save" />
+            <Button style="@style/AppButton" android:id="@+id/btnSave" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Save" />
             <Space android:layout_width="12dp" android:layout_height="wrap_content" />
-            <Button android:id="@+id/btnCancel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Cancel" />
+            <Button style="@style/AppButton" android:id="@+id/btnCancel" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="Cancel" />
         </LinearLayout>
 
     </LinearLayout>

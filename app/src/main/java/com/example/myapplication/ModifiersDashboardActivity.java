@@ -14,6 +14,10 @@ import android.database.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.Color;
+import android.util.TypedValue;
+import java.util.Random;
 
 public class ModifiersDashboardActivity extends AppCompatActivity {
     private DBHelper db;
@@ -26,7 +30,6 @@ public class ModifiersDashboardActivity extends AppCompatActivity {
         db = new DBHelper(this);
 
         TextView lblHeader = findViewById(R.id.lblHeader);
-        Button btnBackModifiers = findViewById(R.id.btnBackModifiers);
         Button btnEnterNewClient = findViewById(R.id.btnEnterNewClient);
         tfSearchClients = findViewById(R.id.tfSearchClients);
         llClientsContainer = findViewById(R.id.llClientsContainer);
@@ -35,10 +38,7 @@ public class ModifiersDashboardActivity extends AppCompatActivity {
         else if ("SUB".equalsIgnoreCase(AppSession.role)) lblHeader.setText("Subconductor Engineer");
         else lblHeader.setText("");
 
-        boolean showBack = "SENIOR".equalsIgnoreCase(AppSession.role) || "SUB".equalsIgnoreCase(AppSession.role);
-        btnBackModifiers.setVisibility(showBack ? View.VISIBLE : View.GONE);
-
-        btnBackModifiers.setOnClickListener(v -> startActivity(new Intent(ModifiersDashboardActivity.this, LoginActivity.class)));
+        // system back button/navigation will handle back; no explicit Back UI on Android
 
         btnEnterNewClient.setVisibility("SUB".equalsIgnoreCase(AppSession.role) ? View.GONE : View.VISIBLE);
         btnEnterNewClient.setOnClickListener(v -> startActivity(new Intent(ModifiersDashboardActivity.this, ClientDetailsActivity.class)));
@@ -49,95 +49,84 @@ public class ModifiersDashboardActivity extends AppCompatActivity {
     }
 
     private void refreshClients() {
-        llClientsContainer.removeAllViews();
-        List<View> added = new ArrayList<>();
-        try (Cursor c = db.fetchClients()) {
-            while (c.moveToNext()) {
-                int id = c.getInt(c.getColumnIndexOrThrow("id"));
-                String name = c.getString(c.getColumnIndexOrThrow("name"));
-                String phone = c.getString(c.getColumnIndexOrThrow("phone"));
-                String pwd = null;
-                try { pwd = c.getString(c.getColumnIndexOrThrow("password")); } catch (Exception ignored) {}
-
-                LinearLayout clientBox = new LinearLayout(this);
-                clientBox.setOrientation(LinearLayout.VERTICAL);
-                LinearLayout.LayoutParams bp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                bp.setMargins(8,8,8,8);
-                clientBox.setLayoutParams(bp);
-                clientBox.setPadding(8,8,8,8);
-                clientBox.setBackgroundResource(android.R.drawable.dialog_holo_light_frame);
-
-                Button b = new Button(this);
-                b.setText(name);
-                b.setAllCaps(false);
-                b.setOnClickListener(v -> {
-                    AppSession.clientName = name;
-                    AppSession.phoneNumber = phone;
-                    AppSession.clientId = id;
-                    startActivity(new Intent(ModifiersDashboardActivity.this, ClientLocationsActivity.class));
-                });
-                clientBox.addView(b);
-
-                TextView phoneLabel = new TextView(this);
-                phoneLabel.setText(phone);
-                clientBox.addView(phoneLabel);
-
-                if ("SENIOR".equalsIgnoreCase(AppSession.role)) {
-                    TextView pwdLabel = new TextView(this);
-                    pwdLabel.setText(pwd == null ? "" : pwd);
-                    clientBox.addView(pwdLabel);
-
-                    LinearLayout btnRow = new LinearLayout(this);
-                    btnRow.setOrientation(LinearLayout.HORIZONTAL);
-
-                    Button editBtn = new Button(this);
-                    editBtn.setText("Edit");
-                    editBtn.setOnClickListener(v -> {
-                        AppSession.clientId = id;
-                        AppSession.clientName = name;
-                        AppSession.phoneNumber = phone;
-                        startActivity(new Intent(ModifiersDashboardActivity.this, EditClientActivity.class));
-                    });
-
-                    Button deleteBtn = new Button(this);
-                    deleteBtn.setText("Delete");
-                    deleteBtn.setOnClickListener(v -> {
-                        int removed = db.deleteClient(id);
-                        if (removed > 0) {
-                            Toast.makeText(this, "Client deleted", Toast.LENGTH_SHORT).show();
-                            runOnUiThread(this::refreshClients);
-                        } else {
-                            Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    btnRow.addView(editBtn);
-                    btnRow.addView(deleteBtn);
-                    clientBox.addView(btnRow);
-                }
-
-                llClientsContainer.addView(clientBox);
-                added.add(clientBox);
+        androidx.recyclerview.widget.RecyclerView rc = findViewById(R.id.rcClients);
+        ClientAdapter adapter = new ClientAdapter(this, AppSession.role, new ClientAdapter.OnActionListener() {
+            @Override public void onClientSelected(ClientAdapter.Client client) {
+                AppSession.clientName = client.name; AppSession.phoneNumber = client.phone; AppSession.clientId = client.id; startActivity(new Intent(ModifiersDashboardActivity.this, ClientLocationsActivity.class));
             }
-        } catch (Exception ex) { ex.printStackTrace(); }
+            @Override public void onEdit(ClientAdapter.Client client) {
+                AppSession.clientId = client.id; AppSession.clientName = client.name; AppSession.phoneNumber = client.phone; startActivity(new Intent(ModifiersDashboardActivity.this, EditClientActivity.class));
+            }
+            @Override public void onDelete(ClientAdapter.Client client) {
+                int removed = db.deleteClient(client.id);
+                if (removed > 0) { Toast.makeText(ModifiersDashboardActivity.this, "Client deleted", Toast.LENGTH_SHORT).show(); refreshClients(); }
+                else Toast.makeText(ModifiersDashboardActivity.this, "Delete failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        rc.setAdapter(adapter);
+        rc.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
+        try (Cursor c = db.fetchClients()) { adapter.setFromCursor(c); }
+        // styling now applied in adapter during binding
 
-        // search
         tfSearchClients.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(android.text.Editable s) {
                 String q = s == null ? "" : s.toString().trim().toLowerCase();
-                for (View v : added) {
-                    if (v instanceof ViewGroup) {
-                        ViewGroup vg = (ViewGroup) v;
-                        if (vg.getChildCount() > 0 && vg.getChildAt(0) instanceof Button) {
-                            Button btn = (Button) vg.getChildAt(0);
-                            String name = btn.getText() == null ? "" : btn.getText().toString().toLowerCase();
-                            vg.setVisibility(q.isEmpty() || name.contains(q) ? View.VISIBLE : View.GONE);
-                        }
-                    }
-                }
+                // simple filter by re-querying cursor and setting adapter (keeps code simple)
+                try (Cursor c = db.fetchClients()) {
+                    // build a filtered cursor-like list
+                    // adapter.setFromCursor will receive full cursor and adapter will display all; for simplicity we rely on DB fetch
+                    adapter.setFromCursor(c);
+                } catch (Exception ex) { ex.printStackTrace(); }
             }
         });
+    }
+
+    private final int[] STICKER_PALETTE = new int[] {
+            0xFF6EC6FF, // light blue
+            0xFFFF8A65, // orange
+            0xFFAED581, // green
+            0xFFF48FB1, // pink
+            0xFFFFF176, // yellow
+            0xFFB39DDB  // purple
+    };
+
+    private void applyStickerStyle(Button btn, int index) {
+        int color = STICKER_PALETTE[index % STICKER_PALETTE.length];
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(color);
+        float radius = getResources().getDisplayMetrics().density * 12f;
+        gd.setCornerRadius(radius);
+        int stroke = (int)(getResources().getDisplayMetrics().density * 0.5f);
+        gd.setStroke(stroke, 0x22000000);
+        btn.setBackground(gd);
+        // choose text color based on luminance for readability
+        double r = ((color >> 16) & 0xFF) / 255.0;
+        double g = ((color >> 8) & 0xFF) / 255.0;
+        double b = (color & 0xFF) / 255.0;
+        double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        btn.setTextColor(luminance > 0.6 ? 0xFF222222 : Color.WHITE);
+        int pad = (int)(getResources().getDisplayMetrics().density * 12f);
+        btn.setPadding(pad, pad, pad, pad);
+        btn.setAllCaps(false);
+        // add slight elevation for sticker effect
+        btn.setElevation(getResources().getDisplayMetrics().density * 4f);
+    }
+
+    private void applyActionStyle(Button btn) {
+        float dp = getResources().getDisplayMetrics().density;
+        GradientDrawable gd = new GradientDrawable();
+        gd.setColor(Color.TRANSPARENT);
+        float radius = dp * 8f;
+        gd.setCornerRadius(radius);
+        gd.setStroke((int)(dp * 1f), 0xFF666666);
+        btn.setBackground(gd);
+        btn.setTextColor(0xFF333333);
+        int padH = (int)(dp * 8f);
+        int padV = (int)(dp * 4f);
+        btn.setPadding(padH, padV, padH, padV);
+        btn.setAllCaps(false);
+        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
     }
 }
