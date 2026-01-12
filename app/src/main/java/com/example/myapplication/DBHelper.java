@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String NAME = "spt.db";
+    private static final String NAME = "spt.db";/**/
     private static final int VERSION = 1;
     private static final String TAG = "DBHelper";
     private FirebaseFirestore firestore;
